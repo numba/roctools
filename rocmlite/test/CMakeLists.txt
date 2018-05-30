@@ -3,7 +3,15 @@
 # All rights reserved.
 #
 
-# Add a gtest with and the same running with valgrind
+
+find_program(VALGRIND valgrind)
+if(NOT VALGRIND)
+    message("Did not find valgrind.")
+else()
+    message("Found valgrind. ${VALGRIND}")
+endif()
+
+# Add a gtest with and the same running with valgrind (if found)
 macro(add_gtest TESTNAME)
     add_executable(${TESTNAME} ${TESTNAME}.cpp)
     # set link dir
@@ -21,10 +29,12 @@ macro(add_gtest TESTNAME)
 
     get_target_property(TEST_LOCATION ${TESTNAME} LOCATION)
     add_test(${TESTNAME} ${TEST_LOCATION})
-    add_test(${TESTNAME}_with_valgrind
-         valgrind --error-exitcode=1 --leak-check=full --show-leak-kinds=all
-         --suppressions=test_suppressions.supp
-         ${TEST_LOCATION})
+    if(VALGRIND)
+        add_test(${TESTNAME}_with_valgrind
+            valgrind --error-exitcode=1 --leak-check=full --show-leak-kinds=all
+            --suppressions=test_suppressions.supp
+            ${TEST_LOCATION})
+    endif()
 endmacro()
 
 set(TESTS
