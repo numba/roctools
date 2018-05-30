@@ -1,0 +1,29 @@
+{
+   <Suppress_leak_in_stack_trace_handler>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:_ZL17CreateSigAltStackv
+   fun:_ZL16RegisterHandlersv
+   fun:_ZN4llvm3sys16AddSignalHandlerEPFvPvES1_
+   fun:_ZN4llvm3sys28PrintStackTraceOnErrorSignalEb
+}
+
+{
+   <Suppress_leak_in_stack_trace_handler_with_debug_info>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:CreateSigAltStack
+   fun:_ZL16RegisterHandlersv
+   fun:_ZN4llvm3sys16AddSignalHandlerEPFvPvES1_
+}
+
+{
+   <Suppress_leak_in_stack_trace_in_docker>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:_ZL16RegisterHandlersv
+}
+

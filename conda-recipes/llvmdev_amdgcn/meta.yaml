@@ -1,0 +1,79 @@
+{% set shortversion = "roc-1.8" %}
+{% set version = "roc-1.8.x" %}
+{% set conda_version = "roc_1.8.x" %}
+{% set build_number = "0" %}
+
+package:
+  name: llvmdev_amdgcn
+  version: {{ conda_version }}
+
+source:
+  - git_url: git@github.com:RadeonOpenCompute/llvm.git
+    git_tag: {{ version }}
+    patches:
+        # undefined behavior bug due to Twine usage
+        - twine_cfg_undefined_behavior.patch
+  - git_url: git@github.com:RadeonOpenCompute/lld.git
+    git_tag: {{ version }}
+    folder: tools/lld
+
+build:
+  number: {{ build_number }}
+  script_env:
+    - PY_VCRUNTIME_REDIST
+  ignore_run_exports:
+    # Is static-linked
+    - xar
+
+requirements:
+  build:
+    # We cannot do this on macOS or windows
+    # OSX already has llvm so has to be handled
+    # at build.sh time
+    # Windows needs to build using vs2015_runtime
+    # irrespective of python version
+    - {{ compiler('c') }} # [unix]
+    - {{ compiler('cxx') }} # [unix]
+    - cmake
+    # Needed to unpack the source tarball
+    - m2w64-xz  # [py27 and win]
+    # ninja not currently used, bld.bat needs an update
+    - ninja  # [win]
+    # Needed to build LLVM
+    - python
+    # need vs2015_runtime to build, do not want it at run time
+    # as extensions for py27 need vs2008
+    - vs2015_runtime # [win]
+    - make # [unix]
+  host:
+    # needed for llc at runtime
+    - zlib # [not win]
+    - xar # [osx]
+
+test:
+  requires:
+    - python
+  files:
+    - cfg_test.ll
+    - test_cfg_dot.py
+  commands:
+    - $PREFIX/bin/llvm-config --libs                         # [not win]
+    - $PREFIX/bin/llc -version                               # [not win]
+
+    - if not exist %LIBRARY_INC%\\llvm\\Pass.h exit 1        # [win]
+    - if not exist %LIBRARY_LIB%\\LLVMSupport.lib exit 1     # [win]
+
+    - test -f $PREFIX/include/llvm/Pass.h                    # [unix]
+    - test -f $PREFIX/lib/libLLVMSupport.a                   # [unix]
+
+    - test -f $PREFIX/lib/libLLVMCore.a                      # [not win]
+    # Test for ../twine_cfg_undefined_behavior.patch
+    - $PREFIX/bin/opt -dot-cfg cfg_test.ll                   # [not win]
+    - python test_cfg_dot.py                                 # [not win]
+
+about:
+  home: http://llvm.org/
+  dev_url: https://github.com/llvm-mirror/llvm
+  license: NCSA
+  license_file: LICENSE.TXT
+  summary: Development headers and libraries for LLVM
