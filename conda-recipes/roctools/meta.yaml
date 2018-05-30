@@ -2,7 +2,7 @@
 {% set opencl_devel_sha256="8691bd36c47d76919de635b896322239875ec5afa49c5912232615ce6627063e" %}
 
 package:
-    name: rocmtools
+    name: roctools
     version: "0.0"
 
 source:
@@ -42,7 +42,7 @@ test:
     - ld.lld --help
 
 about:
-    home: https://github.com/numba/rocmtools
+    home: https://github.com/numba/roctools
     license: BSD
     summary: A shared library that wraps LLVM for code
              generation for devices with Radeon Open Compute support.
