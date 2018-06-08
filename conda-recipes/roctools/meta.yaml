@@ -1,5 +1,5 @@
-{% set opencl_devel_ver="1.2.0-2018050600" %}
-{% set opencl_devel_sha256="8691bd36c47d76919de635b896322239875ec5afa49c5912232615ce6627063e" %}
+{% set opencl_devel_ver="1.2.0-2018053132" %}
+{% set opencl_devel_sha256="95f429a25d7e6081fe1c75bd05feb5e515408b82a1631f09d96abb4232e1af68" %}
 
 package:
     name: roctools
@@ -8,7 +8,7 @@ package:
 source:
   - path: ../..
   - fn: rocm-opencl-devel-{{ opencl_devel_ver }}.x86_64.rpm
-    url: http://repo.radeon.com/rocm/yum/rpm/rocm-opencl-devel-{{ opencl_devel_ver }}.x86_64.rpm
+    url: http://repo.radeon.com/rocm/yum/yum/rocm-opencl-devel-{{ opencl_devel_ver }}.x86_64.rpm
     folder: opencl_tmp
     sha256: {{ opencl_devel_sha256 }}
 
@@ -46,4 +46,4 @@ about:
     license: BSD
     summary: A shared library that wraps LLVM for code
              generation for devices with Radeon Open Compute support.
-#     license_file: LICENSE.TXT
+    license_file: LICENSE

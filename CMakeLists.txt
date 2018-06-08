@@ -69,7 +69,7 @@ message(
 ------------------------------------
 |           Build Summary          |
 ------------------------------------
-Building...........: ${CMAKE_PROJECT_NAME} version ${libHLC_VERSION}
+Building...........: ${CMAKE_PROJECT_NAME} version ${librocmlite_VERSION}
 LLVM version.......: ${LLVM_PACKAGE_VERSION}
 LLVM location......: ${LLVM_DIR}
 C++ Compiler.......: ${CMAKE_CXX_COMPILER}

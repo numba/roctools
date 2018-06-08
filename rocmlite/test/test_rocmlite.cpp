@@ -9,8 +9,8 @@ TEST(TEST_BASE, Initialization)
 {
     for (int i = 0 ; i < 4; i++)
     {
-        HLC_Initialize();
-        HLC_Finalize();
+        ROC_Initialize();
+        ROC_Finalize();
     }
 }
 

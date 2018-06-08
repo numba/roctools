@@ -584,50 +584,50 @@ extern "C" {
 
     typedef struct OpaqueModule* llvm_module_ptr;
 
-    void HLC_Initialize()
+    void ROC_Initialize()
     {
         Initialize();
     }
 
-    void HLC_Finalize()
+    void ROC_Finalize()
     {
         Finalize();
     }
 
 
-    char* HLC_CreateString(const char *str)
+    char* ROC_CreateString(const char *str)
     {
         return strdup(str);
     }
 
-    void HLC_DisposeString(char *str)
+    void ROC_DisposeString(char *str)
     {
         free(str);
     }
 
-    ModuleRef* HLC_ParseModule(const char *Asm)
+    ModuleRef* ROC_ParseModule(const char *Asm)
     {
         return ModuleRef::parseAssembly(Asm);
     }
 
-    ModuleRef* HLC_ParseBitcode(const char *Asm, size_t Len)
+    ModuleRef* ROC_ParseBitcode(const char *Asm, size_t Len)
     {
         ModuleRef * mref = ModuleRef::parseBitcode(Asm, Len);
         return mref;
     }
 
-    void HLC_ModulePrint(ModuleRef *M, char **output)
+    void ROC_ModulePrint(ModuleRef *M, char **output)
     {
-        *output = HLC_CreateString(M->to_string().c_str());
+        *output = ROC_CreateString(M->to_string().c_str());
     }
 
-    void HLC_ModuleDestroy(ModuleRef *M)
+    void ROC_ModuleDestroy(ModuleRef *M)
     {
         M->destroy();
         delete M;
     }
 
-    int HLC_ModuleOptimize(ModuleRef *M, int OptLevel, int SizeLevel, int Verify)
+    int ROC_ModuleOptimize(ModuleRef *M, int OptLevel, int SizeLevel, int Verify)
     {
         if (OptLevel < 0 || OptLevel > 3) return 0;
         if (SizeLevel < 0 || SizeLevel > 2) return 0;
@@ -637,7 +637,7 @@ extern "C" {
     }
 
 
-    int HLC_ModuleLinkIn(ModuleRef * Dst, ModuleRef * Src)
+    int ROC_ModuleLinkIn(ModuleRef * Dst, ModuleRef * Src)
     {
         const Module * ref = Src->getModule();
         std::unique_ptr<Module> sM = llvm::CloneModule (*ref);
@@ -655,7 +655,7 @@ extern "C" {
     }
 
 
-    int HLC_ModuleEmitHSAIL(ModuleRef *M, int OptLevel, char **output)
+    int ROC_ModuleEmitHSAIL(ModuleRef *M, int OptLevel, char **output)
     {
         const Module * ref = M->getModule();
         std::unique_ptr<Module> sM = llvm::CloneModule (*ref);
@@ -668,11 +668,11 @@ extern "C" {
         if(status) return 0;
         // Write output
         os.flush();
-        *output = HLC_CreateString(buf.c_str());
+        *output = ROC_CreateString(buf.c_str());
         return 1;
     }
 
-    size_t HLC_ModuleEmitBRIG(ModuleRef *M, int OptLevel, char **output)
+    size_t ROC_ModuleEmitBRIG(ModuleRef *M, int OptLevel, char **output)
     {
         const Module * ref = M->getModule();
         std::unique_ptr<Module> sM = llvm::CloneModule (*ref);
@@ -690,7 +690,7 @@ extern "C" {
         return buf.size();
     }
 
-    void HLC_SetCommandLineOption(int argc, const char * const * argv)
+    void ROC_SetCommandLineOption(int argc, const char * const * argv)
     {
         llvm::cl::ParseCommandLineOptions(argc, argv, "Does things");
     }
