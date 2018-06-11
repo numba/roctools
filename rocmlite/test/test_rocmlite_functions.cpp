@@ -163,7 +163,7 @@ TEST(TEST_BASE, test_optimize_module)
     }
 
     // run an optimisation pass over the module
-    ret = ROC_ModuleOptimize(dst, 3, 0, 1);
+    ret = ROC_ModuleOptimize(dst, 3, 0, 1, "fiji");
     EXPECT_TRUE(ret == 1);
 
     ROC_ModuleDestroy(dst);
@@ -192,12 +192,14 @@ TEST(TEST_BASE, test_compile_module_to_HSAIL)
         ROC_ModuleDestroy(bc_src);
     }
 
+    const char * cpu = "fiji";
+
     // run an optimisation pass over the module
-    ret = ROC_ModuleOptimize(dst, 3, 0, 1);
+    ret = ROC_ModuleOptimize(dst, 3, 0, 1, cpu);
     ASSERT_TRUE(ret == 1);
 
     char * output;
-    ret = ROC_ModuleEmitHSAIL(dst, 2, &output);
+    ret = ROC_ModuleEmitHSAIL(dst, 2, cpu, &output);
     EXPECT_TRUE(ret > 0);
     std::string hsail(output);
 
@@ -233,12 +235,14 @@ TEST(TEST_BASE, test_compile_module_to_BRIG)
         ROC_ModuleDestroy(bc_src);
     }
 
+    const char * cpu = "fiji";
+
     // run an optimisation pass over the module
-    ret = ROC_ModuleOptimize(dst, 3, 0, 1);
+    ret = ROC_ModuleOptimize(dst, 3, 0, 1, cpu);
     ASSERT_TRUE(ret == 1);
 
     char * output;
-    ret = ROC_ModuleEmitBRIG(dst, 2, &output);
+    ret = ROC_ModuleEmitBRIG(dst, 2, cpu, &output);
     EXPECT_TRUE(ret > 0);
 
     char elf_string[] = "\x7f\x45\x4c\x46";
@@ -257,7 +261,9 @@ TEST(TEST_BASE, test_compile_module_to_BRIG)
 // Test many compilation calls to BRIG works
 TEST(TEST_BASE, test_many_compile_module_to_BRIG)
 {
+    const char * cpu = "fiji";
     int trials = 5;
+
     for(int k = 0; k < trials; k++)
     {
         ROC_Initialize();
@@ -281,11 +287,11 @@ TEST(TEST_BASE, test_many_compile_module_to_BRIG)
         }
 
         // run an optimisation pass over the module
-        ret = ROC_ModuleOptimize(dst, 3, 0, 1);
+        ret = ROC_ModuleOptimize(dst, 3, 0, 1, cpu);
         ASSERT_TRUE(ret == 1);
 
         char * output;
-        ret = ROC_ModuleEmitBRIG(dst, 2, &output);
+        ret = ROC_ModuleEmitBRIG(dst, 2, cpu, &output);
         EXPECT_TRUE(ret > 0);
 
         char elf_string[] = "\x7f\x45\x4c\x46";

@@ -351,7 +351,8 @@ namespace librocmlite
                                               GetCodeGenOptLevel(OptLevel));
     }
 
-    void Optimize(llvm::Module * M, int OptLevel, int SizeLevel, int Verify)
+    void Optimize(llvm::Module * M, int OptLevel, int SizeLevel, int Verify,
+            const char * Cpu)
     {
 
         bool OptLevelO1 = false;
@@ -396,7 +397,8 @@ namespace librocmlite
 
 
         Triple ModuleTriple(M->getTargetTriple());
-        std::string CPUStr="fiji", FeaturesStr="";
+        std::string CPUStr(Cpu);
+        std::string FeaturesStr="";
         TargetMachine *Machine = nullptr;
         TargetOptions Options;
 
@@ -482,7 +484,7 @@ namespace librocmlite
     // --- START LLC section ---
 
     int CompileModule(std::unique_ptr<Module> mod, raw_string_ostream &os, bool emitBRIG,
-                      int OptLevel)
+                      int OptLevel, const char * Cpu)
     {
         // Load the module to be compiled...
         SMDiagnostic Err;
@@ -503,7 +505,8 @@ namespace librocmlite
         }
 
         // Package up features to be passed to target/subtarget
-        std::string CPUStr = "fiji", FeaturesStr = "+promote-alloca,+fp64-denormals,+flat-for-global,";
+        std::string CPUStr(Cpu);
+        std::string FeaturesStr = "+promote-alloca,+fp64-denormals,+flat-for-global,";
 
         CodeGenOpt::Level OLvl = CodeGenOpt::Default;
         switch (OptLevel)
@@ -627,12 +630,13 @@ extern "C" {
         delete M;
     }
 
-    int ROC_ModuleOptimize(ModuleRef *M, int OptLevel, int SizeLevel, int Verify)
+    int ROC_ModuleOptimize(ModuleRef *M, int OptLevel, int SizeLevel,
+            int Verify, const char * Cpu)
     {
         if (OptLevel < 0 || OptLevel > 3) return 0;
         if (SizeLevel < 0 || SizeLevel > 2) return 0;
         Module * mref = M->getModule();
-        Optimize(mref, OptLevel, SizeLevel, Verify);
+        Optimize(mref, OptLevel, SizeLevel, Verify, Cpu);
         return 1;
     }
 
@@ -655,7 +659,8 @@ extern "C" {
     }
 
 
-    int ROC_ModuleEmitHSAIL(ModuleRef *M, int OptLevel, char **output)
+    int ROC_ModuleEmitHSAIL(ModuleRef *M, int OptLevel, const char * Cpu,
+            char **output)
     {
         const Module * ref = M->getModule();
         std::unique_ptr<Module> sM = llvm::CloneModule (*ref);
@@ -664,7 +669,7 @@ extern "C" {
         // Compile
         std::string buf;
         raw_string_ostream os(buf);
-        int status = CompileModule(std::move(sM), os, false, OptLevel);
+        int status = CompileModule(std::move(sM), os, false, OptLevel, Cpu);
         if(status) return 0;
         // Write output
         os.flush();
@@ -672,7 +677,8 @@ extern "C" {
         return 1;
     }
 
-    size_t ROC_ModuleEmitBRIG(ModuleRef *M, int OptLevel, char **output)
+    size_t ROC_ModuleEmitBRIG(ModuleRef *M, int OptLevel, const char * Cpu,
+            char **output)
     {
         const Module * ref = M->getModule();
         std::unique_ptr<Module> sM = llvm::CloneModule (*ref);
@@ -681,7 +687,7 @@ extern "C" {
         // Compile
         std::string buf;
         raw_string_ostream os(buf);
-        int status  = CompileModule(std::move(sM), os, true, OptLevel);
+        int status  = CompileModule(std::move(sM), os, true, OptLevel, Cpu);
         if(status) return 0;
         // Write output
         os.flush();

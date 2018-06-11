@@ -35,7 +35,7 @@ namespace librocmlite
     void Finalize();
 
     // Optimize a module in place
-    void Optimize(llvm::Module * M, int OptLevel, int SizeLevel, int Verify);
+    void Optimize(llvm::Module * M, int OptLevel, int SizeLevel, int Verify, const char * Cpu);
 
     // Compile a module
     int CompileModule(std::unique_ptr<llvm::Module> mod, llvm::raw_string_ostream &os, bool emitBRIG,
@@ -69,13 +69,13 @@ void ROC_ModulePrint(ModuleRef *M, char **output);
 
 void ROC_ModuleDestroy(ModuleRef *M);
 
-int ROC_ModuleOptimize(ModuleRef *M, int OptLevel, int SizeLevel, int Verify);
+int ROC_ModuleOptimize(ModuleRef *M, int OptLevel, int SizeLevel, int Verify, const char * Cpu);
 
 int ROC_ModuleLinkIn(ModuleRef * Dst, ModuleRef * Src);
 
-int ROC_ModuleEmitHSAIL(ModuleRef *M, int OptLevel, char **output);
+int ROC_ModuleEmitHSAIL(ModuleRef *M, int OptLevel, const char * Cpu, char **output);
 
-size_t ROC_ModuleEmitBRIG(ModuleRef *M, int OptLevel, char **output);
+size_t ROC_ModuleEmitBRIG(ModuleRef *M, int OptLevel, const char * Cpu, char **output);
 
 void ROC_SetCommandLineOption(int argc, const char * const * argv);
 
