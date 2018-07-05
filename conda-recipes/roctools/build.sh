@@ -26,21 +26,23 @@ for bitcode in "${bitcodes[@]}"; do
 done
 
 # move the bitcode to the pkg dir
-mv bitcode $PREFIX
+RESOURCE_PATH="$PREFIX/share/rocmtools"
+mv bitcode $RESOURCE_PATH
 
-# ###############################################################################
-# # Now do C++ library build
-# ###############################################################################
+###############################################################################
+# Now do C++ library build
+###############################################################################
 CMAKE_BUILD_DIR="cmake_build" # this needs to match meta.yaml test::source_files
 mkdir ${CMAKE_BUILD_DIR}
 pushd ${CMAKE_BUILD_DIR}
 
 printenv
 
-# Force CMake to look in the conda env "CMAKE_CONDA_ROOT" `/lib` etc for libraries via `-L`
+# Force CMake to look in the conda env "CMAKE_CONDA_ROOT" `/lib` etc 
+# for libraries via `-L`
 cmake .. -DCMAKE_BUILD_TYPE=RELEASE \
          -DCMAKE_CONDA_ROOT:PATH="$BUILD_PREFIX" \
-         -DCMAKE_BITCODE_ROOT:PATH="$PREFIX/bitcode"
+         -DCMAKE_BITCODE_ROOT:PATH="$RESOURCE_PATH"
 
 # build
 make VERBOSE=1
@@ -57,6 +59,10 @@ popd
 
 ###############################################################################
 # Copy llvmdev binary tools to /bin
+# NOTE: should these names start to cause collision issues with llvm installs
+# they can be prefixed e.g. amd_opt. However `ld.lld` will need to have a 
+# `-flavour gnu` permanently supplied so it knows that it is emulating the GNU
+# linker variant.
 ###############################################################################
 declare -a tools=( \
 "opt"              \
@@ -66,5 +72,5 @@ declare -a tools=( \
 )
 
 for tool in "${tools[@]}"; do
-    cp "$BUILD_PREFIX/bin/$tool" "$PREFIX/bin"
+    cp "$BUILD_PREFIX/bin/$tool" "$PREFIX/bin/$tool"
 done

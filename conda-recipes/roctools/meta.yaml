@@ -3,7 +3,7 @@
 
 package:
     name: roctools
-    version: "0.0"
+    version:  {{ environ.get('GIT_DESCRIBE_TAG', '') }}
 
 source:
   - path: ../..
@@ -13,7 +13,7 @@ source:
     sha256: {{ opencl_devel_sha256 }}
 
 build:
-    number: 0
+    number: {{ environ.get('GIT_DESCRIBE_NUMBER', 0) }}
 
 requirements:
   build:
@@ -36,8 +36,8 @@ test:
     # The librocmlite.so DSO is tested at compile time
 
     # Check llvm binaries actually run
-    - opt --help
-    - llc --help
+    - opt --help | grep amdgpu
+    - llc --help | grep amdgpu
     - llvm-link --help
     - ld.lld --help
 
