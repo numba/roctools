@@ -8,7 +8,7 @@ package:
 source:
   - path: ../..
   - fn: rocm-opencl-devel-{{ opencl_devel_ver }}.x86_64.rpm
-    url: http://repo.radeon.com/rocm/yum/yum/rocm-opencl-devel-{{ opencl_devel_ver }}.x86_64.rpm
+    url: http://repo.radeon.com/rocm/yum/rpm/rocm-opencl-devel-{{ opencl_devel_ver }}.x86_64.rpm
     folder: opencl_tmp
     sha256: {{ opencl_devel_sha256 }}
 
