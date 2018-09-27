@@ -1,6 +1,6 @@
-{% set shortversion = "roc-1.8" %}
-{% set version = "roc-1.8.x" %}
-{% set conda_version = "roc_1.8.x" %}
+{% set shortversion = "roc-1.9" %}
+{% set version = "roc-1.9.x" %}
+{% set conda_version = "roc_1.9.x" %}
 {% set build_number = "0" %}
 
 package:

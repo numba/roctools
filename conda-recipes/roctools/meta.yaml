@@ -1,5 +1,5 @@
-{% set opencl_devel_ver="1.2.0-2018053132" %}
-{% set opencl_devel_sha256="95f429a25d7e6081fe1c75bd05feb5e515408b82a1631f09d96abb4232e1af68" %}
+{% set opencl_devel_ver="1.2.0-2018090742" %}
+{% set opencl_devel_sha256="369d1aec83a18eec2665faed59bde266e54daef21bd6b1150d9dfb054b7d201d" %}
 
 package:
     name: roctools
@@ -24,7 +24,7 @@ requirements:
     - zlib
     - bzip2
     - libarchive
-    - llvmdev_amdgcn
+    - llvmdev_amdgcn=roc_1.9.x
     # gtest is used in the test binaries
     - gtest
 
