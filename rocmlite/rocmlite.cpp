@@ -11,7 +11,7 @@
 #include "llvm/AsmParser/Parser.h"
 #include "llvm/Bitcode/BitcodeWriterPass.h"
 #include "llvm/Bitcode/BitcodeReader.h"
-#include "llvm/CodeGen/CommandFlags.def"
+#include "llvm/CodeGen/CommandFlags.inc"
 #include "llvm/CodeGen/LinkAllAsmWriterComponents.h"
 #include "llvm/CodeGen/LinkAllCodegenComponents.h"
 #include "llvm/CodeGen/MachineFunctionPass.h"
@@ -32,6 +32,7 @@
 #include "llvm/IR/Module.h"
 #include "llvm/IRReader/IRReader.h"
 #include "llvm/IR/Verifier.h"
+#include "llvm/InitializePasses.h"
 #include "llvm/LinkAllIR.h"
 #include "llvm/LinkAllPasses.h"
 #include "llvm/Linker/Linker.h"
@@ -42,6 +43,7 @@
 #include "llvm/Support/FileSystem.h"
 #include "llvm/Support/FormattedStream.h"
 #include "llvm/Support/Host.h"
+#include "llvm/Support/InitLLVM.h"
 #include "llvm/Support/ManagedStatic.h"
 #include "llvm/Support/PluginLoader.h"
 #include "llvm/Support/PrettyStackTrace.h"
@@ -205,6 +207,7 @@ namespace librocmlite
         initializeAnalysis(Registry);
         initializeTransformUtils(Registry);
         initializeInstCombine(Registry);
+        initializeAggressiveInstCombine(Registry);
         initializeInstrumentation(Registry);
         initializeTarget(Registry);
         // For codegen passes, only passes that do IR to IR transformation are
@@ -566,7 +569,7 @@ namespace librocmlite
 
             // Ask the target to add backend passes as necessary.
             bool Verify = true;
-            if (Target->addPassesToEmitFile(PM, BOS, FileType, Verify))
+            if (Target->addPassesToEmitFile(PM, BOS, nullptr, FileType, Verify))
             {
                 errs() << "target does not support generation of this"
                        << " file type!\n";
