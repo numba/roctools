@@ -10,7 +10,7 @@ DARWIN_TARGET=x86_64-apple-darwin13.4.0
 
 declare -a _cmake_config
 _cmake_config+=(-DCMAKE_INSTALL_PREFIX:PATH=${PREFIX})
-_cmake_config+=(-DCMAKE_BUILD_TYPE:STRING=Release)
+_cmake_config+=(-DCMAKE_BUILD_TYPE:STRING=Debug)
 # The bootstrap clang I use was built with a static libLLVMObject.a and I trying to get the same here
 # _cmake_config+=(-DBUILD_SHARED_LIBS:BOOL=ON)
 _cmake_config+=(-DLLVM_ENABLE_ASSERTIONS:BOOL=ON)

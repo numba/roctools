@@ -1,6 +1,6 @@
 {% set shortversion = "roc-1.9" %}
 {% set version = "roc-1.9.x" %}
-{% set conda_version = "roc_1.9.x" %}
+{% set conda_version = "roc_1.9.x_debug" %}
 {% set build_number = "0" %}
 
 package:
@@ -24,6 +24,7 @@ build:
   ignore_run_exports:
     # Is static-linked
     - xar
+  detect_binary_files_with_prefix: False
 
 requirements:
   build:
