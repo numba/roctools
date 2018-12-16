@@ -53,7 +53,7 @@ cp "rocmlite/librocmlite.so" "$PREFIX/lib"
 # test now, splitting this out to work at test time is hard to do
 # the test_XXX binaries are dynamically linked to librocmlite but no rpath
 # fix is made unless the binaries are also shipped (undesirable).
-ctest -V
+#ctest -V
 
 popd
 
